@@ -1,7 +1,7 @@
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
-#include "minHeap.h"
+#include "MinHeap.h"
 #include <vector>
 #include <list>
 #include <iostream>

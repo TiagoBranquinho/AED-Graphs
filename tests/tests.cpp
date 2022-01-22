@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../Graph.h"
+#include <iostream>
 
 using testing::Eq;
 
@@ -19,6 +20,9 @@ TEST(test1, dijkstra_distance) {
     g1.addEdge(5, 6, 5);
     g1.addEdge(6, 7,8);
     g1.addEdge(8, 9,6);
+
+    for (auto i : g1.dijkstra_path(1,9))
+        cout << " > " << i;
 
     EXPECT_EQ(5,g1.dijkstra_distance(1, 2));
     EXPECT_EQ(2,g1.dijkstra_distance(2, 3));
