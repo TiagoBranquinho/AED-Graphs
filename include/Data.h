@@ -15,6 +15,8 @@ public:
     std::string filepath = "../dataset/";
     std::string linesFile = "lines.csv";
     std::string stopsFile = "stops.csv";
+    std::string linestr = "line";
+    std::string filetype = ".csv";
     char sep = '_';
 
     struct Stop{
@@ -37,7 +39,7 @@ public:
     std::vector<std::string> readLine(std::string line, char delim);
     std::vector<std::string> readStop(std::string line, char delim);
 
-    std::string lineFile(std::string line, int direction);
+    std::vector<std::string> readLinePath(std::string line, std::string direction);
     std::string getLine(std::string code);
     std::string getStop(int node);
     int getNode(std::string stop);

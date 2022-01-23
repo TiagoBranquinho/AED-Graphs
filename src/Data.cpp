@@ -34,6 +34,7 @@ void Data::readStops() {
             stops.insert({count, stop.code});
             nodes.insert({stop.code, count});
         }
+        file.close();
     }
 }
 
@@ -58,6 +59,7 @@ void Data::readLines() {
             vector<string> values = readLine(fileLine, ',');
             lines.insert({values[0], values[1]});
         }
+        file.close();
     }
 
 }
@@ -73,8 +75,22 @@ std::vector<std::string> Data::readLine(std::string fileLine, char delim) {
     return values;
 }
 
-std::string Data::lineFile(std::string line, int direction) {
-    return std::string();
+vector<string> Data::readLinePath(std::string line, string direction) {
+    vector<string> linepath;
+    string filename = linestr + sep + line + sep + direction + filetype;
+    ifstream file(filepath + filename);
+
+    int linesize;
+    string stopname;
+    if (file.is_open()){
+        file >> linesize;
+        for (int i = 0; i < linesize; i++){
+            file >> stopname;
+            linepath.push_back(stopname);
+        }
+        file.close();
+    }
+    return linepath;
 }
 
 std::string Data::getLine(std::string code) {

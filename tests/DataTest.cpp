@@ -50,3 +50,19 @@ TEST(test1, readStopsTest) {
         cout << it->first << " -> " << it->second << endl;
     EXPECT_EQ(it, d.nodes.end());
 }
+
+TEST(test1, readLinePath) {
+    Data data;
+    vector<string> path = data.readLinePath("1", "1");
+
+    for (auto s : path) {
+        cout << " -> " << s;
+    }
+    cout << endl;
+
+    path = data.readLinePath("1", "0");
+
+    for (auto s : path) {
+        cout << " -> " << s;
+    }
+}
