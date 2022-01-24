@@ -19,14 +19,14 @@ void Graph::addEdge(int src, int dest, const string& line, int weight) {
 
 
 double Graph::dijkstra_distance(int a, int b) {
-    dijkstra(a);
+    dijkstraDistance(a);
     if (nodes[b].dist == INF) return -1;
     return nodes[b].dist;
 
 }
 
 vector<pair<int,string>> Graph::dijkstra_path(int a, int b) {
-    dijkstra(a);
+    dijkstraDistance(a);
     list<pair<int,string>> path;
     if (nodes[b].dist == INF) return {};
     path.emplace_back(b,"");
@@ -40,7 +40,7 @@ vector<pair<int,string>> Graph::dijkstra_path(int a, int b) {
     return res;
 }
 
-void Graph::dijkstra(int s) {
+void Graph::dijkstraDistance(int s) {
     MinHeap<int, int> q(n, -1);
     for (int v=1; v<=n; v++) {
         nodes[v].dist = INF;
@@ -68,4 +68,38 @@ void Graph::dijkstra(int s) {
             }
         }
     }
+}
+
+void Graph::dijkstraLines(int s) {
+    MinHeap<int, int> q(n, -1);
+    for (int v=1; v<=n; v++) {
+        nodes[v].dist = INF;
+        nodes[v].visited = false;
+        nodes[v].lineCon = "";
+        q.insert(v, INF);
+    }
+    nodes[s].dist = 0;
+    q.decreaseKey(s, 0);
+    nodes[s].pred = s;
+
+    while (q.getSize()>0) {
+        int u = q.removeMin();
+        // cout << "Node " << u << " with dist = " << nodes[u].distGap << endl;
+        nodes[u].visited = true;
+        for (auto e : nodes[u].adj) {
+            int v = e.dest;
+            int w = e.distGap;
+            if (!nodes[v].visited && nodes[u].dist + w < nodes[v].dist) {
+                nodes[v].dist = nodes[u].dist + w;
+                q.decreaseKey(v, nodes[v].dist);
+
+                nodes[v].pred = u;
+                nodes[v].lineCon = e.line;
+            }
+        }
+    }
+}
+
+void Graph::dijkstraZones(int s) {
+
 }

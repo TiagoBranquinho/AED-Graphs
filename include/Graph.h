@@ -27,7 +27,9 @@ class Graph {
     bool hasDir;        // false: undirect; true: directed
     vector<Node> nodes; // The list of nodes being represented
 
-    void dijkstra(int s);
+    void dijkstraDistance(int s);
+    void dijkstraLines(int s);
+    void dijkstraZones(int s);
 
 public:
     // Constructor: nr nodes and direction (default: undirected)

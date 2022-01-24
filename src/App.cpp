@@ -17,13 +17,14 @@ void App::createGraph() {
     graph = Graph(nodes, true);
     for (const auto& line : data.lines) {
         vector<string> path0 = data.readLinePath(line.first,"0");
-        vector<string> path1 = data.readLinePath(line.first,"0");
+        vector<string> path1 = data.readLinePath(line.first,"1");
         createLinePath(line.first, path0);
         createLinePath(line.first, path1);
     }
 }
 
 void App::createLinePath(string line, vector<string> path) {
+    if (path.empty()) return;
     for (int i = 0; i < path.size() - 1; i++) {
         int src = data.getNode(path[i]);
         int dest = data.getNode(path[i+1]);
