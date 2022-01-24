@@ -21,6 +21,9 @@ void App::createGraph() {
         createLinePath(line.first, path0);
         createLinePath(line.first, path1);
     }
+    for (int i = 1; i < graph.getNodes().size(); i++){
+        graph.getNodes()[i].name = data.getStop(i);
+    }
 }
 
 void App::createLinePath(string line, vector<string> path) {
@@ -56,6 +59,7 @@ void App::viewPath(vector<pair<int, string>> path) {
             else if (!path[i+1].second.empty()) cout << endl << "line: " << path[i+1].second << endl;
         }
         else if (path[i+1].second.empty()){
+            cout << " -> " << data.getStop(path[i].first) << "-" << data.stopsVector[path[i].first].name << endl;
             cout << " -> " << data.getStop(path[i+1].first) << "-" << data.stopsVector[path[i+1].first].name << endl;
         }
         else{

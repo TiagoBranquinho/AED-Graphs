@@ -15,8 +15,15 @@ public:
     void createGraph();
     void createLinePath(std::string line, std::vector<std::string> path);
     void createWalkPaths(int maxDist);
+    int addLocalNode(pair<double, double> local);
+    void removeLocalNode(int node);
 
     void viewPath(vector<pair<int,string>> path);
+    void bestPathSTOPS(int src, int dest);
+    void bestPathDIST(int src, int dest);
+    void bestPathLINES(int src, int dest);
+    void bestPathZONES(int src, int dest);
+
     int distance(int src, int dest);
     static int haversine(double lat1, double lon1, double lat2, double lon2);
 };
