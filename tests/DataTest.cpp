@@ -60,9 +60,21 @@ TEST(test1, readLinePath) {
     }
     cout << endl;
 
-    path = data.readLinePath("1", "0");
+    path = data.readLinePath("10M", "1");
 
     for (auto s : path) {
         cout << " -> " << s;
     }
+    cout << endl;
+
+
+    struct s{
+        int i;
+        string ada;
+        double asd;
+    };
+    vector<s> v(10);
+    cout << " v size: " << v.size() << endl;
+    for (auto i : v)
+        cout << i.i << "  "<< i.ada << "  " << i.asd << endl;
 }

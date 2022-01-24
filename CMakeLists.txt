@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 project(GRAPHS_AED)
 
 set(CMAKE_CXX_STANDARD 14)
-add_executable(GRAPHS_AED main.cpp src/Graph.cpp include/Graph.h include/MinHeap.h tests/tests.cpp include/Data.h src/Data.cpp tests/DataTest.cpp)
+add_executable(GRAPHS_AED main.cpp src/Graph.cpp include/Graph.h include/MinHeap.h tests/tests.cpp include/Data.h src/Data.cpp tests/DataTest.cpp src/App.cpp include/App.h tests/AppTest.cpp)
 
 add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)

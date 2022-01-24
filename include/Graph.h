@@ -6,13 +6,11 @@
 #include <list>
 #include <iostream>
 
-using namespace std;
-
 class Graph {
     struct Edge {
-        int dest;   // Destination node
-        int weight; // An integer weight
-        string line; //
+        int dest;   // Destination node stop
+        int distGap; // An integer distance interval between node stops
+        string line; // line between stops
     };
 
     struct Node {
@@ -20,7 +18,9 @@ class Graph {
         int dist;
         int pred;
         bool visited;
-        string name;
+        string lineCon;
+        string name; // stop name
+        string zone;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -31,14 +31,15 @@ class Graph {
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
+    Graph();
     Graph(int nodes, bool dir = false);
+    vector<Node> &getNodes();
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int weight = 1);
+    void addEdge(int src, int dest, const string& line, int weight = 1);
 
-    // ----- Functions to implement in this class -----
-    int dijkstra_distance(int a, int b);
-    list<int> dijkstra_path(int a, int b);
+    double dijkstra_distance(int a, int b);
+    vector<pair<int,string>> dijkstra_path(int a, int b);
 };
 
 #endif

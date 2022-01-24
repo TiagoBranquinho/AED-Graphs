@@ -11,7 +11,7 @@
 #include <vector>
 
 class Data{
-public:
+private:
     std::string filepath = "../dataset/";
     std::string linesFile = "lines.csv";
     std::string stopsFile = "stops.csv";
@@ -19,6 +19,7 @@ public:
     std::string filetype = ".csv";
     char sep = '_';
 
+public:
     struct Stop{
         std::string code;
         std::string name;

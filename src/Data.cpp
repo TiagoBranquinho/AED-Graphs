@@ -17,6 +17,7 @@ void Data::readStops() {
 
     if (file.is_open()){
         getline(file, fileline);
+        stopsVector.push_back({});
         int count = 0;
 
         while (getline(file, fileline)) {
