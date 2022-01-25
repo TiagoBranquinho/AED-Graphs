@@ -129,3 +129,28 @@ TEST(test1, distZonesTest) {
     auto path = app.graph.dijkstraPathZN(src, dest);
     app.viewPath(path);
 }
+
+TEST(test1, distStopsTest) {
+    App app;
+
+    app.createGraph();
+    app.createWalkPaths(100);
+
+    int PBSS2 = app.data.getNode("PBSS2");
+    int PBSS4 = app.data.getNode("PBSS4");
+    cout << "dist PBSS2 to PBSS4: " << app.distance(PBSS2, PBSS4) << endl << endl;
+
+    //string stop2 = "ARSR1";
+    /*string stop2 = "RFZ1";
+    string stop1 = "CMP2";*/
+    string stop1 = "CMP2";
+    string stop2 = "CMP1";
+    int src = app.data.getNode(stop1);
+    int dest = app.data.getNode(stop2);
+
+    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
+    cout << "number of stops: " << app.graph.bfsDistanceST(src, dest) << endl;
+
+    auto path = app.graph.bfsPathST(src, dest);
+    app.viewPath(path);
+}

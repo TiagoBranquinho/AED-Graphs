@@ -16,6 +16,7 @@ class Graph {
     struct Node {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         int dist;
+        int stopChanges;
         int lineChanges;
         int zoneChanges;
         int pred;
@@ -29,6 +30,7 @@ class Graph {
     bool hasDir;        // false: undirect; true: directed
     vector<Node> nodes; // The list of nodes being represented
 
+    void bfsStops(int s);
     void dijkstraDist(int s);
     void dijkstraLines(int s);
     void dijkstraZones(int s);
@@ -42,10 +44,10 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, const string& line, int weight = 1);
-    list<pair<int,string>> dijkstraPath(int a, int b);
+    list<pair<int,string>> buildPath(int a, int b);
 
-    int dijkstraDistanceST(int a, int b);
-    vector<pair<int,string>> dijkstraPathST(int a, int b);
+    int bfsDistanceST(int a, int b);
+    vector<pair<int,string>> bfsPathST(int a, int b);
     int dijkstraDistanceDS(int a, int b);
     vector<pair<int,string>> dijkstraPathDS(int a, int b);
     int dijkstraDistanceLN(int a, int b);

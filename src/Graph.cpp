@@ -1,5 +1,7 @@
 #include "../include/Graph.h"
 #include <climits>
+#include <queue>
+
 #define INF (INT_MAX/2)
 
 Graph::Graph() = default;
@@ -17,7 +19,7 @@ void Graph::addEdge(int src, int dest, const string& line, int weight) {
     if (!hasDir) nodes[dest].adj.push_back({src, weight, line});
 }
 
-list<pair<int, string>> Graph::dijkstraPath(int a, int b) {
+list<pair<int, string>> Graph::buildPath(int a, int b) {
     list<pair<int,string>> path;
     path.emplace_back(b,"");
     int v = b;
@@ -28,6 +30,29 @@ list<pair<int, string>> Graph::dijkstraPath(int a, int b) {
     }
     return path;
 }
+
+void Graph::bfsStops(int s) {
+    for (int v=1; v<=n; v++) nodes[v].visited = false;
+    queue<int> q; // queue of unvisited nodes
+    q.push(s);
+    nodes[s].visited = true;
+    nodes[s].stopChanges = 1;
+    while (!q.empty()) { // while there are still unvisited nodes
+        int u = q.front(); q.pop();
+        //cout << nodes[u].name << endl; // show node order
+        for (auto e : nodes[u].adj) {
+            int v = e.dest;
+            if (!nodes[v].visited) {
+                q.push(v);
+                nodes[v].visited = true;
+                nodes[v].stopChanges = nodes[u].stopChanges + 1;
+                nodes[v].pred = u;
+                nodes[v].lineCon = e.line;
+            }
+        }
+    }
+}
+
 
 void Graph::dijkstraDist(int s) {
     MinHeap<int, int> q(n, -1);
@@ -130,6 +155,20 @@ void Graph::dijkstraZones(int s) {
     }
 }
 
+int Graph::bfsDistanceST(int a, int b) {
+    bfsStops(a);
+    if (nodes[b].stopChanges == 0) return -1;
+    return nodes[b].stopChanges;
+}
+
+vector<pair<int, string>> Graph::bfsPathST(int a, int b) {
+    bfsStops(a);
+    if (nodes[b].stopChanges == 0) return {};
+    list<pair<int,string>> path = buildPath(a, b);
+    vector<pair<int, string>> res(path.begin(), path.end());
+    return res;
+}
+
 int Graph::dijkstraDistanceDS(int a, int b) {
     dijkstraDist(a);
     if (nodes[b].dist == INF) return -1;
@@ -138,15 +177,8 @@ int Graph::dijkstraDistanceDS(int a, int b) {
 
 vector<pair<int,string>> Graph::dijkstraPathDS(int a, int b) {
     dijkstraDist(a);
-    list<pair<int,string>> path;
     if (nodes[b].dist == INF) return {};
-    path.emplace_back(b,"");
-    int v = b;
-    while (v != a) {
-        string line = nodes[v].lineCon;
-        v = nodes[v].pred;
-        path.push_front({v,line});
-    }
+    list<pair<int,string>> path = buildPath(a, b);
     vector<pair<int,string>> res(path.begin(), path.end());
     return res;
 }
@@ -160,7 +192,7 @@ int Graph::dijkstraDistanceLN(int a, int b) {
 vector<pair<int, string>> Graph::dijkstraPathLN(int a, int b) {
     dijkstraLines(a);
     if (nodes[b].lineChanges == INF) return {};
-    list<pair<int,string>> path = dijkstraPath(a,b);
+    list<pair<int,string>> path = buildPath(a, b);
     vector<pair<int,string>> res(path.begin(), path.end());
     return res;
 }
@@ -174,7 +206,8 @@ int Graph::dijkstraDistanceZN(int a, int b) {
 vector<pair<int, string>> Graph::dijkstraPathZN(int a, int b) {
     dijkstraZones(a);
     if (nodes[b].zoneChanges == INF) return {};
-    list<pair<int,string>> path = dijkstraPath(a,b);
+    list<pair<int,string>> path = buildPath(a, b);
     vector<pair<int,string>> res(path.begin(), path.end());
     return res;
 }
+
