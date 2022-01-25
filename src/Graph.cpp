@@ -42,7 +42,7 @@ void Graph::bfsStops(int s) {
         //cout << nodes[u].name << endl; // show node order
         for (auto e : nodes[u].adj) {
             int v = e.dest;
-            if (!nodes[v].visited) {
+            if (!nodes[v].visited && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
                 q.push(v);
                 nodes[v].visited = true;
                 nodes[v].stopChanges = nodes[u].stopChanges + 1;
@@ -73,7 +73,7 @@ void Graph::dijkstraDist(int s) {
         for (auto e : nodes[u].adj) {
             int v = e.dest;
             int w = e.distGap;
-            if (!nodes[v].visited && nodes[u].dist + w < nodes[v].dist) {
+            if (!nodes[v].visited && nodes[u].dist + w < nodes[v].dist && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
                 nodes[v].dist = nodes[u].dist + w;
                 q.decreaseKey(v, nodes[v].dist);
 
@@ -101,14 +101,14 @@ void Graph::dijkstraLines(int s) {
         nodes[u].visited = true;
         //cout << "In Node " << nodes[u].name << " lines = " << nodes[u].lineChanges << endl;
         for (auto e : nodes[u].adj) {
-            int v = e.dest;
-            int w = nodes[u].lineCon != e.line; // considering walking is a line change
-            /*if (e.line == "WALK") w = 0;
-            else w = nodes[u].lineCon != e.line;*/ // considering walking isn't a line change
+            int v = e.dest; int w;
+            //int w = nodes[u].lineCon != e.line; // considering walking is a line change
+            if (e.line == "WALK") w = 0;
+            else w = nodes[u].lineCon != e.line; // considering walking isn't a line change
 
             //cout << "Node " << nodes[v].name << " visited : " << nodes[v].visited << endl;
             //cout << "Weight " << w << endl;
-            if (!nodes[v].visited && nodes[u].lineChanges + w <= nodes[v].lineChanges) {
+            if (!nodes[v].visited && nodes[u].lineChanges + w <= nodes[v].lineChanges && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
                 //cout << "Node " << nodes[v].name << " with " << nodes[v].lineChanges << " changed" << endl;
                 nodes[v].lineChanges = nodes[u].lineChanges + w;
                 q.decreaseKey(v, nodes[v].lineChanges);
@@ -142,7 +142,7 @@ void Graph::dijkstraZones(int s) {
             int w = nodes[u].zone != nodes[v].zone;
             //cout << "Node " << nodes[v].name << " " << nodes[v].zone << " visited : " << nodes[v].visited << endl;
             //cout << "Weight " << w << endl;
-            if (!nodes[v].visited && nodes[u].zoneChanges + w < nodes[v].zoneChanges) {
+            if (!nodes[v].visited && nodes[u].zoneChanges + w < nodes[v].zoneChanges && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
                 //cout << "Node " << nodes[v].name << " " << nodes[v].zone << " with " << nodes[v].zoneChanges << " changed" << endl;
                 nodes[v].zoneChanges = nodes[u].zoneChanges + w;
                 q.decreaseKey(v, nodes[v].zoneChanges);
@@ -209,5 +209,13 @@ vector<pair<int, string>> Graph::dijkstraPathZN(int a, int b) {
     list<pair<int,string>> path = buildPath(a, b);
     vector<pair<int,string>> res(path.begin(), path.end());
     return res;
+}
+
+void Graph::addNodeN() {
+    n++;
+}
+
+void Graph::removeNodeN() {
+    n--;
 }
 

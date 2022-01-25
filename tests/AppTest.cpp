@@ -154,3 +154,48 @@ TEST(test1, distStopsTest) {
     auto path = app.graph.bfsPathST(src, dest);
     app.viewPath(path);
 }
+
+TEST(test1, coordsLocalsTests) {
+    App app;
+    int maxDist = 200;
+
+    app.createGraph();
+    app.createWalkPaths(maxDist);
+    app.setMaxWalkDist(maxDist);
+
+    int src = app.addLocalNode({41.145104, -8.610857},"My Position", 0);
+
+    string stop1 = "CMP2";
+    int dest = app.data.getNode(stop1);
+
+    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
+    cout << "number of stops: " << app.graph.bfsDistanceST(src, dest) << endl;
+
+    auto path = app.graph.bfsPathST(src, dest);
+    app.viewPath(path);
+
+    cout << "BEFORE stop map size " << app.data.stops.size() << endl;
+    cout << "BEFORE nodes map size " << app.data.nodes.size() << endl;
+    app.removeLocalNode(src);
+    cout << "AFTER stop map size " << app.data.stops.size() << endl;
+    cout << "AFTER nodes map size " << app.data.nodes.size() << endl;
+}
+
+TEST(test1, coordsSRCandDESTTests) {
+    App app;
+    int maxDist = 100;
+
+    app.createGraph();
+    app.createWalkPaths(maxDist);
+    app.setMaxWalkDist(maxDist);
+
+    int src = app.addLocalNode({41.145104, -8.610857},"My Position", 0);
+    int dest = app.addLocalNode({41.150147, -8.602150},"Destination", 1);
+
+    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
+    cout << "number of lines: " << app.graph.dijkstraDistanceLN(src, dest) << endl;
+
+    auto path = app.graph.dijkstraPathLN(src, dest);
+    app.viewPath(path);
+    app.removeLocalNode(src);
+}

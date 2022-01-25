@@ -51,6 +51,10 @@ void App::createWalkPaths(int maxDist) {
 }
 
 void App::viewPath(vector<pair<int, string>> path) {
+    if (path.empty()){
+        cout << "No path available." << endl;
+        return;
+    }
     cout << endl;
     cout << "line: " << path[0].second << endl;
     for (int i = 0; i < path.size() - 1; i++){
@@ -105,3 +109,41 @@ int App::haversine(double lat1, double lon1, double lat2, double lon2) {
     return (int)res;
 }
 
+int App::getMaxWalkDist() {
+    return maxWalkDist;
+}
+
+void App::setMaxWalkDist(int dist) {
+    maxWalkDist = dist;
+}
+
+int App::addLocalNode(pair<double, double> local, string name, int direction) {
+    graph.addNodeN();
+    int index = (int) graph.getNodes().size();
+    string nodeName = name + " lat: " + to_string(local.first) + " long: " + to_string(local.second);
+    graph.getNodes().push_back({{}, 0,0,0,0,0,false,"", nodeName, ""});
+    data.stopsVector.push_back({"", nodeName, "", local.first, local.second});
+    data.stops.insert({index, nodeName});
+    data.nodes.insert({nodeName, index});
+    addWalkPathsToNode(index, direction);
+    return index;
+}
+
+void App::removeLocalNode(int node) {
+    string code = data.getStop(node);
+    graph.getNodes().erase(graph.getNodes().begin()+node);
+    data.stopsVector.erase(data.stopsVector.begin()+node);
+    data.stops.erase(node);
+    data.nodes.erase(code);
+    graph.removeNodeN();
+}
+
+void App::addWalkPathsToNode(int node, int direction) {
+    for (int i = 0; i < graph.getNodes().size(); i++){
+        int dist = distance(node, i);
+        if (dist <= maxWalkDist){
+            if (direction) graph.addEdge(i,node,"WALK", dist);
+            else graph.addEdge(node,i,"WALK", dist);
+        }
+    }
+}

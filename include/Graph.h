@@ -41,6 +41,8 @@ public:
     Graph();
     Graph(int nodes, bool dir = false);
     vector<Node> &getNodes();
+    void addNodeN();
+    void removeNodeN();
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, const string& line, int weight = 1);

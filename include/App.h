@@ -5,6 +5,7 @@
 #include "Graph.h"
 
 class App {
+    int maxWalkDist;
 public:
     Data data;
     Graph graph;
@@ -15,8 +16,11 @@ public:
     void createGraph();
     void createLinePath(std::string line, std::vector<std::string> path);
     void createWalkPaths(int maxDist);
-    int addLocalNode(pair<double, double> local);
+    void addWalkPathsToNode(int node, int direction);
+    int addLocalNode(pair<double, double> local, string name, int direction);
     void removeLocalNode(int node);
+    int getMaxWalkDist();
+    void setMaxWalkDist(int dist);
 
     void viewPath(vector<pair<int,string>> path);
     void bestPathSTOPS(int src, int dest);
