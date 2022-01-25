@@ -1,6 +1,7 @@
 #include "../include/App.h"
 
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 
 App::App() {
@@ -23,6 +24,7 @@ void App::createGraph() {
     }
     for (int i = 1; i < graph.getNodes().size(); i++){
         graph.getNodes()[i].name = data.getStop(i);
+        graph.getNodes()[i].zone = data.stopsVector[i].zone;
     }
 }
 
@@ -52,18 +54,23 @@ void App::viewPath(vector<pair<int, string>> path) {
     cout << endl;
     cout << "line: " << path[0].second << endl;
     for (int i = 0; i < path.size() - 1; i++){
+        string stop1 = data.getStop(path[i].first) + "-" + data.stopsVector[path[i].first].name;
+        string zone1 = data.stopsVector[path[i].first].zone;
+        string stop2 = data.getStop(path[i+1].first) + "-" + data.stopsVector[path[i+1].first].name;
+        string zone2 = data.stopsVector[path[i+1].first].zone;
+        int width = 35;
         if (path[i].second != path[i+1].second && !path[i+1].second.empty()){
-            cout << " -> " << data.getStop(path[i].first) << "-" << data.stopsVector[path[i].first].name << endl;
-            cout << " -> " << data.getStop(path[i+1].first) << "-" << data.stopsVector[path[i+1].first].name << endl;
+            cout << std::left << " -> " << setw(width) << stop1 << zone1 << endl;
+            cout << std::left << " -> " << setw(width) << stop2 << zone2 << endl;
             if (path[i+1].second == "WALK") cout << endl << "Walking:" << endl;
             else if (!path[i+1].second.empty()) cout << endl << "line: " << path[i+1].second << endl;
         }
         else if (path[i+1].second.empty()){
-            cout << " -> " << data.getStop(path[i].first) << "-" << data.stopsVector[path[i].first].name << endl;
-            cout << " -> " << data.getStop(path[i+1].first) << "-" << data.stopsVector[path[i+1].first].name << endl;
+            cout << std::left << " -> " << setw(width) << stop1 << zone1 << endl;
+            cout << std::left << " -> " << setw(width) << stop2 << zone2 << endl;
         }
         else{
-            cout << " -> " << data.getStop(path[i].first) << "-" << data.stopsVector[path[i].first].name << endl;
+            cout << std::left << " -> " << setw(width) << stop1 << zone1 << endl;
         }
     }
 }

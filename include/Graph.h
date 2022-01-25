@@ -17,6 +17,7 @@ class Graph {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         int dist;
         int lineChanges;
+        int zoneChanges;
         int pred;
         bool visited;
         string lineCon;
