@@ -5,9 +5,10 @@
 #ifndef GRAPHS_AED_APPSTARTER_H
 #define GRAPHS_AED_APPSTARTER_H
 
-
 #include "App.h"
 #include "Menu.h"
+
+#include <stack>
 
 class AppStarter {
     App app;

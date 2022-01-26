@@ -133,7 +133,7 @@ int App::addLocalNode(pair<double, double> local, string name, int direction) {
     graph.addNodeN();
     int index = (int) graph.getNodes().size();
     string nodeName = name + " lat: " + to_string(local.first) + " long: " + to_string(local.second);
-    graph.getNodes().push_back({{}, 0,0,0,0,0,false,"", nodeName, ""});
+    graph.getNodes().push_back({{},{}, 0,0,0,0,0,false,"", nodeName, ""});
     data.stopsVector.push_back({"", nodeName, "", local.first, local.second});
     data.stops.insert({index, nodeName});
     data.nodes.insert({nodeName, index});

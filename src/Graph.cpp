@@ -1,6 +1,7 @@
 #include "../include/Graph.h"
 #include <climits>
 #include <queue>
+#include <algorithm>
 
 #define INF (INT_MAX/2)
 
@@ -29,6 +30,22 @@ list<pair<int, string>> Graph::buildPath(int a, int b) {
         path.push_front({v,line});
     }
     return path;
+}
+
+list<pair<int, string>> Graph::backtraceDijkstraLines(int a, int b, int dist){
+    int maxChanges = dist;
+    int dest = b;
+    while (dest != a){
+        int changes = nodes[dest].lineChanges;
+        for (const auto& line : nodes[dest].lineCons) {
+            int src = line.first;
+            if (nodes[src].lineChanges <= changes){
+                dest = src;
+                break;
+            }
+        }
+    }
+    return buildPath(a,b);
 }
 
 void Graph::bfsStops(int s) {
@@ -95,6 +112,7 @@ void Graph::dijkstraLines(int s) {
     nodes[s].lineChanges = 0;
     q.decreaseKey(s, 0);
     nodes[s].pred = s;
+    nodes[s].lineCon = "s";
 
     while (q.getSize()>0) {
         int u = q.removeMin();
@@ -103,8 +121,9 @@ void Graph::dijkstraLines(int s) {
         for (auto e : nodes[u].adj) {
             int v = e.dest; int w;
             //int w = nodes[u].lineCon != e.line; // considering walking is a line change
-            if (e.line == "WALK") w = 0;
-            else w = nodes[u].lineCon != e.line; // considering walking isn't a line change
+            if (e.line == "WALK" || (nodes[u].lineCon=="s" && e.line=="WALK")) w = 0;
+            else if (checkBackLines(u,e)) w = 0;
+            else w = 1; // considering walking isn't a line change
 
             //cout << "Node " << nodes[v].name << " visited : " << nodes[v].visited << endl;
             //cout << "Weight " << w << endl;
@@ -114,6 +133,10 @@ void Graph::dijkstraLines(int s) {
                 q.decreaseKey(v, nodes[v].lineChanges);
                 nodes[v].pred = u;
                 nodes[v].lineCon = e.line;
+                nodes[v].lineCons.emplace_back(u,e.line);
+                if (nodes[u].lineChanges + w < nodes[v].lineChanges){
+                    nodes[v].lineCons = {{u,e.line}};
+                }
                 //cout << "AFTER -> Node " << nodes[v].name << " with " << nodes[v].lineChanges << " changed" << endl;
             }
         }
@@ -217,5 +240,12 @@ void Graph::addNodeN() {
 
 void Graph::removeNodeN() {
     n--;
+}
+
+bool Graph::checkBackLines(int u, const Edge& e) {
+    for (const auto& backLine :nodes[u].lineCons)
+        if (backLine.second == e.line)
+            return true;
+    return false;
 }
 

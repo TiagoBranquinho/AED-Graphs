@@ -15,6 +15,7 @@ class Graph {
 
     struct Node {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
+        list<pair<int,string>> lineCons;
         int dist;
         int stopChanges;
         int lineChanges;
@@ -47,6 +48,8 @@ public:
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, const string& line, int weight = 1);
     list<pair<int,string>> buildPath(int a, int b);
+    list<pair<int, string>> backtraceDijkstraLines(int a, int b, int dist);
+    bool checkBackLines(int u, const Edge& e);
 
     int bfsDistanceST(int a, int b);
     vector<pair<int,string>> bfsPathST(int a, int b);

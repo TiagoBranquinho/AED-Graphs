@@ -84,7 +84,7 @@ TEST(test1, distLinesTest) {
     App app;
 
     app.createGraph();
-    app.createWalkPaths(100);
+    app.createWalkPaths(150);
 
     int PBSS2 = app.getData().getNode("PBSS2");
     int PBSS4 = app.getData().getNode("PBSS4");
@@ -94,7 +94,7 @@ TEST(test1, distLinesTest) {
     /*string stop2 = "RFZ1";
     string stop1 = "CMP2";*/
     string stop1 = "CMP2";
-    string stop2 = "RCON";
+    string stop2 = "STC2";
     int src = app.getData().getNode(stop1);
     int dest = app.getData().getNode(stop2);
 
