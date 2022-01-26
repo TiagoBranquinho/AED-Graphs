@@ -14,19 +14,19 @@ TEST(test1, apptest) {
     //string stop1 = "CMP1";
     //string stop2 = "ARSR1";
     string stop2 = "BFM4";
-    int src = app.data.getNode(stop1);
-    int dest = app.data.getNode(stop2);
+    int src = app.getData().getNode(stop1);
+    int dest = app.getData().getNode(stop2);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
 
-    double dist = app.graph.dijkstraDistanceDS(src, dest);
+    double dist = app.getGraph().dijkstraDistanceDS(src, dest);
     cout << "distance " << stop1 << "-" << stop2 << " : " << dist  << "m" << endl;
 
-    auto path = app.graph.dijkstraPathDS(src, dest);
+    auto path = app.getGraph().dijkstraPathDS(src, dest);
 
     string line;
     for (auto i : path){
-        cout << " -> " << app.data.stopsVector[i.first].name;
+        cout << " -> " << app.getData().stopsVector[i.first].name;
     }
 
 }
@@ -36,12 +36,12 @@ TEST(test1, distTest) {
 
     string stop1 = "CMP2";
     string stop2 = "NDA1";
-    int src = app.data.getNode(stop1);
-    int dest = app.data.getNode(stop2);
+    int src = app.getData().getNode(stop1);
+    int dest = app.getData().getNode(stop2);
 
     int distance = app.distance(src, dest);
 
-    cout << "from " << app.data.stopsVector[src].name << " to " << app.data.stopsVector[dest].name << endl;
+    cout << "from " << app.getData().stopsVector[src].name << " to " << app.getData().stopsVector[dest].name << endl;
     cout << "distance: " << distance << "m" << endl;
 }
 
@@ -51,13 +51,13 @@ TEST(test1, distTestWalkPaths) {
     app.createGraph();
     app.createWalkPaths(150);
 
-    int cmp2 = app.data.getNode("CMP2");
-    int cmp1 = app.data.getNode("CMP1");
-    int pbss2 = app.data.getNode("PBSS2");
+    int cmp2 = app.getData().getNode("CMP2");
+    int cmp1 = app.getData().getNode("CMP1");
+    int pbss2 = app.getData().getNode("PBSS2");
     cout << "dist cmp1 to cmp2: " << app.distance(cmp1, cmp2) << endl;
     cout << "dist cmp2 to pbss2: " << app.distance(cmp2, pbss2) << endl;
-    for (auto i : app.graph.getNodes()[cmp2].adj){
-        cout << app.data.getStop(i.dest) << " - " << i.line << " - " << i.distGap << "m ,";
+    for (auto i : app.getGraph().getNodes()[cmp2].adj){
+        cout << app.getData().getStop(i.dest) << " - " << i.line << " - " << i.distGap << "m ,";
     }
     cout << endl;
     cout << endl;
@@ -68,15 +68,15 @@ TEST(test1, distTestWalkPaths) {
     //string stop2 = "BFM4";
     string stop1 = "CMP2";
     //string stop2 = "GIT1";
-    int src = app.data.getNode(stop1);
-    int dest = app.data.getNode(stop2);
+    int src = app.getData().getNode(stop1);
+    int dest = app.getData().getNode(stop2);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
 
-    double dist = app.graph.dijkstraDistanceDS(src, dest);
+    double dist = app.getGraph().dijkstraDistanceDS(src, dest);
     cout << "distance " << stop1 << "-" << stop2 << " : " << dist  << "m" << endl;
 
-    auto path = app.graph.dijkstraPathDS(src, dest);
+    auto path = app.getGraph().dijkstraPathDS(src, dest);
     app.viewPath(path);
 }
 
@@ -86,8 +86,8 @@ TEST(test1, distLinesTest) {
     app.createGraph();
     app.createWalkPaths(100);
 
-    int PBSS2 = app.data.getNode("PBSS2");
-    int PBSS4 = app.data.getNode("PBSS4");
+    int PBSS2 = app.getData().getNode("PBSS2");
+    int PBSS4 = app.getData().getNode("PBSS4");
     cout << "dist PBSS2 to PBSS4: " << app.distance(PBSS2, PBSS4) << endl << endl;
 
     //string stop2 = "ARSR1";
@@ -95,13 +95,13 @@ TEST(test1, distLinesTest) {
     string stop1 = "CMP2";*/
     string stop1 = "CMP2";
     string stop2 = "RCON";
-    int src = app.data.getNode(stop1);
-    int dest = app.data.getNode(stop2);
+    int src = app.getData().getNode(stop1);
+    int dest = app.getData().getNode(stop2);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
-    cout << "number of lines: " << app.graph.dijkstraDistanceLN(src, dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
+    cout << "number of lines: " << app.getGraph().dijkstraDistanceLN(src, dest) << endl;
 
-    auto path = app.graph.dijkstraPathLN(src, dest);
+    auto path = app.getGraph().dijkstraPathLN(src, dest);
     app.viewPath(path);
 }
 
@@ -111,8 +111,8 @@ TEST(test1, distZonesTest) {
     app.createGraph();
     app.createWalkPaths(100);
 
-    int PBSS2 = app.data.getNode("PBSS2");
-    int PBSS4 = app.data.getNode("PBSS4");
+    int PBSS2 = app.getData().getNode("PBSS2");
+    int PBSS4 = app.getData().getNode("PBSS4");
     cout << "dist PBSS2 to PBSS4: " << app.distance(PBSS2, PBSS4) << endl << endl;
 
     //string stop2 = "ARSR1";
@@ -120,13 +120,13 @@ TEST(test1, distZonesTest) {
     string stop1 = "CMP2";*/
     string stop1 = "CMP2";
     string stop2 = "BCM4";
-    int src = app.data.getNode(stop1);
-    int dest = app.data.getNode(stop2);
+    int src = app.getData().getNode(stop1);
+    int dest = app.getData().getNode(stop2);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
-    cout << "number of zones: " << app.graph.dijkstraDistanceZN(src, dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
+    cout << "number of zones: " << app.getGraph().dijkstraDistanceZN(src, dest) << endl;
 
-    auto path = app.graph.dijkstraPathZN(src, dest);
+    auto path = app.getGraph().dijkstraPathZN(src, dest);
     app.viewPath(path);
 }
 
@@ -136,8 +136,8 @@ TEST(test1, distStopsTest) {
     app.createGraph();
     app.createWalkPaths(100);
 
-    int PBSS2 = app.data.getNode("PBSS2");
-    int PBSS4 = app.data.getNode("PBSS4");
+    int PBSS2 = app.getData().getNode("PBSS2");
+    int PBSS4 = app.getData().getNode("PBSS4");
     cout << "dist PBSS2 to PBSS4: " << app.distance(PBSS2, PBSS4) << endl << endl;
 
     //string stop2 = "ARSR1";
@@ -145,13 +145,13 @@ TEST(test1, distStopsTest) {
     string stop1 = "CMP2";*/
     string stop1 = "CMP2";
     string stop2 = "CMP1";
-    int src = app.data.getNode(stop1);
-    int dest = app.data.getNode(stop2);
+    int src = app.getData().getNode(stop1);
+    int dest = app.getData().getNode(stop2);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
-    cout << "number of stops: " << app.graph.bfsDistanceST(src, dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
+    cout << "number of stops: " << app.getGraph().bfsDistanceST(src, dest) << endl;
 
-    auto path = app.graph.bfsPathST(src, dest);
+    auto path = app.getGraph().bfsPathST(src, dest);
     app.viewPath(path);
 }
 
@@ -166,19 +166,19 @@ TEST(test1, coordsLocalsTests) {
     int src = app.addLocalNode({41.145104, -8.610857},"My Position", 0);
 
     string stop1 = "CMP2";
-    int dest = app.data.getNode(stop1);
+    int dest = app.getData().getNode(stop1);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
-    cout << "number of stops: " << app.graph.bfsDistanceST(src, dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
+    cout << "number of stops: " << app.getGraph().bfsDistanceST(src, dest) << endl;
 
-    auto path = app.graph.bfsPathST(src, dest);
+    auto path = app.getGraph().bfsPathST(src, dest);
     app.viewPath(path);
 
-    cout << "BEFORE stop map size " << app.data.stops.size() << endl;
-    cout << "BEFORE nodes map size " << app.data.nodes.size() << endl;
+    cout << "BEFORE stop map size " << app.getData().stops.size() << endl;
+    cout << "BEFORE nodes map size " << app.getData().nodes.size() << endl;
     app.removeLocalNode(src);
-    cout << "AFTER stop map size " << app.data.stops.size() << endl;
-    cout << "AFTER nodes map size " << app.data.nodes.size() << endl;
+    cout << "AFTER stop map size " << app.getData().stops.size() << endl;
+    cout << "AFTER nodes map size " << app.getData().nodes.size() << endl;
 }
 
 TEST(test1, coordsSRCandDESTTests) {
@@ -192,10 +192,10 @@ TEST(test1, coordsSRCandDESTTests) {
     int src = app.addLocalNode({41.145104, -8.610857},"My Position", 0);
     int dest = app.addLocalNode({41.150147, -8.602150},"Destination", 1);
 
-    cout << app.data.getStop(src) << " to " << app.data.getStop(dest) << endl;
-    cout << "number of lines: " << app.graph.dijkstraDistanceLN(src, dest) << endl;
+    cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
+    cout << "number of lines: " << app.getGraph().dijkstraDistanceLN(src, dest) << endl;
 
-    auto path = app.graph.dijkstraPathLN(src, dest);
+    auto path = app.getGraph().dijkstraPathLN(src, dest);
     app.viewPath(path);
     app.removeLocalNode(src);
 }

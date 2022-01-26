@@ -49,6 +49,18 @@ void App::createWalkPaths(int maxDist) {
         }
     }
 }
+void App::createWalkPaths() {
+    size_t size = data.stopsVector.size();
+    for (int i = 0; i < size; i++){
+        for (int j = i+1; j < size - 1; j++){
+            int dist = distance(i,j);
+            if (dist <= maxWalkDist){
+                graph.addEdge(i, j, "WALK", dist);
+                graph.addEdge(j, i, "WALK", dist);
+            }
+        }
+    }
+}
 
 void App::viewPath(vector<pair<int, string>> path) {
     if (path.empty()){
@@ -146,4 +158,12 @@ void App::addWalkPathsToNode(int node, int direction) {
             else graph.addEdge(node,i,"WALK", dist);
         }
     }
+}
+
+Graph App::getGraph() {
+    return graph;
+}
+
+Data App::getData() {
+    return data;
 }

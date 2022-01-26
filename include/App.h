@@ -3,19 +3,26 @@
 
 #include "Data.h"
 #include "Graph.h"
+#include <fstream>
+
 
 class App {
-    int maxWalkDist;
-public:
+private:
+    int maxWalkDist = 0;
+
+private:
     Data data;
     Graph graph;
 
 public:
     App();
     void loadData();
+    Data getData();
     void createGraph();
+    Graph getGraph();
     void createLinePath(std::string line, std::vector<std::string> path);
     void createWalkPaths(int maxDist);
+    void createWalkPaths();
     void addWalkPathsToNode(int node, int direction);
     int addLocalNode(pair<double, double> local, string name, int direction);
     void removeLocalNode(int node);
@@ -31,6 +38,5 @@ public:
     int distance(int src, int dest);
     static int haversine(double lat1, double lon1, double lat2, double lon2);
 };
-
 
 #endif //GRAPHS_AED_APP_H
