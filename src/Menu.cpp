@@ -70,6 +70,7 @@ void OptionsMenu::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
     cout << "1 - Change max walking distance" << endl;
+    cout << "2 - Change between day/night only mode" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -77,13 +78,11 @@ void OptionsMenu::display() {
 Menu *OptionsMenu::nextMenu() {
     switch (readInt()) {
         case 1: {
-            cout << "Stop 1 code: ";
-            string stop1 = readStr();
-            cout << "Stop 2 code: ";
-            string stop2 = readStr();
-            int src = app.getData().getNode(stop1);
-            int dest = app.getData().getNode(stop2);
-            return new PathMenu(app,src,dest);
+            cout << "Current max walking distance is " << to_string(app.getMaxWalkDist()) << endl;
+            cout << "Please insert the new value: ";
+            app.setMaxWalkDist(readInt());
+            waitForKey();
+            return this;
         }
         case 0: return nullptr;
         default: return invalidInput();
