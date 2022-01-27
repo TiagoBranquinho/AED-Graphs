@@ -10,8 +10,7 @@ AppStarter::AppStarter() {
 
 void AppStarter::start() {
     app.loadData();
-    app.createGraph();
-    app.createWalkPaths();
+    app.setMaxWalkDist(0);
     while (!menuStack.empty()) {
         menuStack.top()->display();
         Menu *nextMenu = menuStack.top()->nextMenu();

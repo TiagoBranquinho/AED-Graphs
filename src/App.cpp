@@ -127,6 +127,8 @@ int App::getMaxWalkDist() {
 
 void App::setMaxWalkDist(int dist) {
     maxWalkDist = dist;
+    createGraph();
+    createWalkPaths();
 }
 
 int App::addLocalNode(pair<double, double> local, string name, int direction) {
