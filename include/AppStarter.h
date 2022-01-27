@@ -7,6 +7,7 @@
 
 #include "App.h"
 #include "Menu.h"
+#include <stack>
 
 #include <stack>
 

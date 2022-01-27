@@ -106,8 +106,16 @@ Menu *TravelMenu::nextMenu() {
         case 1: {
             cout << "Stop 1 code: ";
             string stop1 = readStr();
+            if(app.getData().nodes.count(stop1) == 0){
+                cout << "Stop 1 doesn't exist";
+                return new OptionsMenu(app);
+            }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
+            if(app.getData().nodes.count(stop2) == 0){
+                cout << "Stop 2 doesn't exist";
+                return new OptionsMenu(app);
+            }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
             return new PathMenu(app,src,dest);
@@ -137,8 +145,16 @@ Menu *InformationMenu::nextMenu() {
         case 1: {
             cout << "Stop 1 code: ";
             string stop1 = readStr();
+            if(app.getData().nodes.count(stop1) == 0){
+                cout << "Stop 1 doesn't exist";
+                return new OptionsMenu(app);
+            }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
+            if(app.getData().nodes.count(stop2) == 0){
+                cout << "Stop 2 doesn't exist";
+                return new OptionsMenu(app);
+            }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
             return new DistanceMenu(app, src, dest);
@@ -146,8 +162,16 @@ Menu *InformationMenu::nextMenu() {
         case 2: {
             cout << "Stop 1 code: ";
             string stop1 = readStr();
+            if(app.getData().nodes.count(stop1) == 0){
+                cout << "Stop 1 doesn't exist";
+                return new OptionsMenu(app);
+            }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
+            if(app.getData().nodes.count(stop2) == 0){
+                cout << "Stop 2 doesn't exist";
+                return new OptionsMenu(app);
+            }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
             int numLines = app.getGraph().dijkstraDistanceLN(src,dest) - 1;
@@ -166,8 +190,16 @@ Menu *InformationMenu::nextMenu() {
         case 3: {
             cout << "Stop 1 code: ";
             string stop1 = readStr();
+            if(app.getData().nodes.count(stop1) == 0){
+                cout << "Stop 1 doesn't exist";
+                return new OptionsMenu(app);
+            }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
+            if(app.getData().nodes.count(stop2) == 0){
+                cout << "Stop 2 doesn't exist";
+                return new OptionsMenu(app);
+            }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
             int numZones = app.getGraph().dijkstraDistanceZN(src,dest) - 1;
@@ -186,8 +218,16 @@ Menu *InformationMenu::nextMenu() {
         case 4: {
             cout << "Stop 1 code: ";
             string stop1 = readStr();
+            if(app.getData().nodes.count(stop1) == 0){
+                cout << "Stop 1 doesn't exist";
+                return new OptionsMenu(app);
+            }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
+            if(app.getData().nodes.count(stop2) == 0){
+                cout << "Stop 2 doesn't exist";
+                return new OptionsMenu(app);
+            }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
             int numStops = abs((int)app.getGraph().bfsPathST(src,dest).size() - 1);
