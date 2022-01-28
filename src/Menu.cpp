@@ -174,7 +174,7 @@ Menu *InformationMenu::nextMenu() {
             }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
-            int numLines = app.getGraph().dijkstraDistanceLN(src,dest) - 1;
+            int numLines = app.dayGraphLines.dijkstraDistanceLN(src,dest) - 1;
             string word = "lines";
             cout << "Stations " << app.getData().stopsVector[src].name << " and " << app.getData().stopsVector[dest].name << " are ";
             if(numLines == 0)
@@ -295,17 +295,17 @@ void PathMenu::display() {
 Menu *PathMenu::nextMenu() {
     switch (readInt()) {
         case 1: {
-            app.viewPath(app.getGraph().dijkstraPathZN(src,dest));
+            app.viewPath(app.getGraph().dijkstraPathZN(src, dest), "day");
             waitForKey();
             return this;
         }
         case 2: {
-            app.viewPath(app.getGraph().dijkstraPathDS(src,dest));
+            app.viewPath(app.getGraph().dijkstraPathDS(src, dest), "day");
             waitForKey();
             return this;
         }
         case 3: {
-            app.viewPath(app.getGraph().dijkstraPathLN(src,dest));
+            app.viewPath(app.dayGraphLines.dijkstraPathLN(src, dest), "day");
             waitForKey();
             return this;
         }

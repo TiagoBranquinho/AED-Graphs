@@ -5,6 +5,8 @@
 #ifndef GRAPHS_AED_DATA_H
 #define GRAPHS_AED_DATA_H
 
+#include "structs.h"
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -20,18 +22,12 @@ private:
     char sep = '_';
 
 public:
-    struct Stop{
-        std::string code;
-        std::string name;
-        std::string zone;
-        double latitude;
-        double longitude;
-    };
-
     std::map<std::string, std::string> lines;
     std::vector<Stop> stopsVector;
     std::map<int, std::string> stops;
     std::map<std::string, int> nodes;
+    std::map<int, int> nightConnector;
+    std::map<int, int> dayConnector;
 
 public:
     Data();

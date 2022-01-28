@@ -9,7 +9,7 @@ using namespace std;
 TEST(test1, apptest) {
     App app;
 
-    app.createGraph();
+    app.createGraphs();
     string stop1 = "CMP2";
     //string stop1 = "CMP1";
     //string stop2 = "ARSR1";
@@ -48,7 +48,7 @@ TEST(test1, distTest) {
 TEST(test1, distTestWalkPaths) {
     App app;
 
-    app.createGraph();
+    app.createGraphs();
     app.createWalkPaths(150);
 
     int cmp2 = app.getData().getNode("CMP2");
@@ -77,14 +77,16 @@ TEST(test1, distTestWalkPaths) {
     cout << "distance " << stop1 << "-" << stop2 << " : " << dist  << "m" << endl;
 
     auto path = app.getGraph().dijkstraPathDS(src, dest);
-    app.viewPath(path);
+    app.viewPath(path, "day");
 }
 
 TEST(test1, distLinesTest) {
     App app;
-
-    app.createGraph();
-    app.createWalkPaths(150);
+    app.loadData();
+    app.setMaxWalkDist(200);
+    app.createGraphs();
+    app.connectLinesWalks(app.dayGraphLines);
+    //app.connectLinesWalks(app.nightGraphLines);
 
     int PBSS2 = app.getData().getNode("PBSS2");
     int PBSS4 = app.getData().getNode("PBSS4");
@@ -94,21 +96,21 @@ TEST(test1, distLinesTest) {
     /*string stop2 = "RFZ1";
     string stop1 = "CMP2";*/
     string stop1 = "CMP2";
-    string stop2 = "STC2";
+    string stop2 = "HMBC2";
     int src = app.getData().getNode(stop1);
     int dest = app.getData().getNode(stop2);
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of lines: " << app.getGraph().dijkstraDistanceLN(src, dest) << endl;
+    cout << "number of lines: " << app.dayGraphLines.dijkstraDistanceLN(src, dest) << endl;
 
-    auto path = app.getGraph().dijkstraPathLN(src, dest);
-    app.viewPath(path);
+    auto path = app.dayGraphLines.dijkstraPathLN(src, dest);
+    app.viewPath(path, "day");
 }
 
 TEST(test1, distZonesTest) {
     App app;
 
-    app.createGraph();
+    app.createGraphs();
     app.createWalkPaths(100);
 
     int PBSS2 = app.getData().getNode("PBSS2");
@@ -127,13 +129,13 @@ TEST(test1, distZonesTest) {
     cout << "number of zones: " << app.getGraph().dijkstraDistanceZN(src, dest) << endl;
 
     auto path = app.getGraph().dijkstraPathZN(src, dest);
-    app.viewPath(path);
+    app.viewPath(path, "day");
 }
 
 TEST(test1, distStopsTest) {
     App app;
 
-    app.createGraph();
+    app.createGraphs();
     app.createWalkPaths(100);
 
     int PBSS2 = app.getData().getNode("PBSS2");
@@ -152,14 +154,14 @@ TEST(test1, distStopsTest) {
     cout << "number of stops: " << app.getGraph().bfsDistanceST(src, dest) << endl;
 
     auto path = app.getGraph().bfsPathST(src, dest);
-    app.viewPath(path);
+    app.viewPath(path, "day");
 }
 
 TEST(test1, coordsLocalsTests) {
     App app;
     int maxDist = 200;
 
-    app.createGraph();
+    app.createGraphs();
     app.createWalkPaths(maxDist);
     app.setMaxWalkDist(maxDist);
 
@@ -172,7 +174,7 @@ TEST(test1, coordsLocalsTests) {
     cout << "number of stops: " << app.getGraph().bfsDistanceST(src, dest) << endl;
 
     auto path = app.getGraph().bfsPathST(src, dest);
-    app.viewPath(path);
+    app.viewPath(path, "day");
 
     cout << "BEFORE stop map size " << app.getData().stops.size() << endl;
     cout << "BEFORE nodes map size " << app.getData().nodes.size() << endl;
@@ -185,7 +187,7 @@ TEST(test1, coordsSRCandDESTTests) {
     App app;
     int maxDist = 100;
 
-    app.createGraph();
+    app.createGraphs();
     app.createWalkPaths(maxDist);
     app.setMaxWalkDist(maxDist);
 
@@ -193,9 +195,9 @@ TEST(test1, coordsSRCandDESTTests) {
     int dest = app.addLocalNode({41.150147, -8.602150},"Destination", 1);
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of lines: " << app.getGraph().dijkstraDistanceLN(src, dest) << endl;
+    cout << "number of lines: " << app.getGraph().dijkstraDistanceDS(src, dest) << endl;
 
-    auto path = app.getGraph().dijkstraPathLN(src, dest);
-    app.viewPath(path);
+    auto path = app.getGraph().dijkstraPathDS(src, dest);
+    app.viewPath(path, "day");
     app.removeLocalNode(src);
 }

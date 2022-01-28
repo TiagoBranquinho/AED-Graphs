@@ -10,7 +10,7 @@ AppStarter::AppStarter() {
 
 void AppStarter::start() {
     app.loadData();
-    app.setMaxWalkDist(0);
+    app.setMaxWalkDist(200);
     while (!menuStack.empty()) {
         menuStack.top()->display();
         Menu *nextMenu = menuStack.top()->nextMenu();
@@ -24,5 +24,4 @@ void AppStarter::start() {
             menuStack.pop();
         }
     }
-    //app.saveData();
 }
