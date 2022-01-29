@@ -1,9 +1,11 @@
 #include "../include/GraphLines.h"
 #include "../include/MinHeap.h"
 
+#include <iostream>
+
 using namespace std;
 
-void GraphLines::dijkstraLines(int s) {
+void GraphLines::dijkstraLines(vector<int> s) {
     MinHeap<int, int> q(n, -1);
     for (int v=1; v<=n; v++) {
         nodes[v].lineChanges = INF;
@@ -11,9 +13,11 @@ void GraphLines::dijkstraLines(int s) {
         nodes[v].lineCon = "";
         q.insert(v, INF);
     }
-    nodes[s].lineChanges = 0;
-    q.decreaseKey(s, 0);
-    nodes[s].pred = s;
+    for (auto src : s){
+        nodes[src].lineChanges = 0;
+        q.decreaseKey(src, 0);
+        nodes[src].pred = -1;
+    }
 
     while (q.getSize()>0) {
         int u = q.removeMin();
@@ -40,16 +44,39 @@ void GraphLines::dijkstraLines(int s) {
     }
 }
 
-int GraphLines::dijkstraDistanceLN(int a, int b) {
+int GraphLines::dijkstraDistanceLN(vector<int> a, vector<int> b) {
     dijkstraLines(a);
-    if (nodes[b].lineChanges == INF) return -1;
-    return nodes[b].lineChanges;
+    int dest = minDest(b);
+    if (nodes[dest].lineChanges == INF) return -1;
+    return nodes[dest].lineChanges;
 }
 
-vector<pair<int, string>> GraphLines::dijkstraPathLN(int a, int b) {
+vector<pair<int, string>> GraphLines::dijkstraPathLN(vector<int> a, vector<int> b) {
     dijkstraLines(a);
-    if (nodes[b].lineChanges == INF) return {};
-    list<pair<int,string>> path = buildPath(a, b);
+    int dest = minDest(b);
+    if (nodes[dest].lineChanges == INF) return {};
+    list<pair<int,string>> path;
+    path.emplace_back(dest,"");
+    int v = dest;
+    while (v != -1) {
+        string line = nodes[v].lineCon;
+        v = nodes[v].pred;
+        path.push_front({v,line});
+    }
+    //list<pair<int,string>> path = buildPath(a, b);
+    path.erase(path.begin());
     vector<pair<int,string>> res(path.begin(), path.end());
     return res;
+}
+
+int GraphLines::minDest(std::vector<int> dest) {
+    int node = dest[0];
+    int minimum = nodes[dest[0]].lineChanges;
+    for (int i : dest){
+        if(minimum > nodes[i].lineChanges){
+            minimum = nodes[i].lineChanges;
+            node = i;
+        }
+    }
+    return node;
 }

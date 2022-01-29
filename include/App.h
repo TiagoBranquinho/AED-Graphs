@@ -28,16 +28,14 @@ public:
 
     void createGraphs();
     void createLinePath(GraphGN &graph, std::string line, std::vector<std::string> path);
-    void createLinePath(GraphLines &graph, map<int, int> &connector, std::string line, std::vector<std::string> path);
-    void createWalkPaths(int maxDist);
+    void createLinePath(GraphLines &graph, map<int, int> &connector, map<int, vector<int>> &inverter, std::string line, std::vector<std::string> path);
     void createWalkPaths();
-    void connectLinesWalks(GraphLines &graph);
 
     void addWalkPathsToNode(int node, int direction);
     int addLocalNode(pair<double, double> local, string name, int direction);
     void removeLocalNode(int node);
 
-    void viewPath(vector<pair<int, string>> path, const string& time);
+    void viewPath(vector<pair<int, string>> path, string time);
     void bestPathSTOPS(int src, int dest);
     void bestPathDIST(int src, int dest);
     void bestPathLINES(int src, int dest);

@@ -13,7 +13,9 @@ void App::loadData() {
 
 void App::createGraphs() {
     data.dayConnector.clear();
+    data.dayConnectorInv.clear();
     data.nightConnector.clear();
+    data.nightConnectorInv.clear();
     for (int i = 1; i < data.stopsVector.size()-1; i++){
         Node node;
         node.name = data.stopsVector[i].code;
@@ -21,10 +23,10 @@ void App::createGraphs() {
         node.line = "";
         dayGraph.addNode(node);
         nightGraph.addNode(node);
-        dayGraphLines.addNode(node);
+        /*dayGraphLines.addNode(node);
         nightGraphLines.addNode(node);
         data.dayConnector.insert({i, i});
-        data.nightConnector.insert({i, i});
+        data.nightConnector.insert({i, i});*/
     }
     for (const auto& line : data.lines) {
         vector<string> path0 = data.readLinePath(line.first,"0");
@@ -32,19 +34,19 @@ void App::createGraphs() {
         if (line.first.back() == 'M'){
             createLinePath(nightGraph, line.first, path0);
             createLinePath(nightGraph, line.first, path1);
-            createLinePath(nightGraphLines, data.nightConnector, line.first, path0);
-            createLinePath(nightGraphLines, data.nightConnector, line.first, path1);
+            createLinePath(nightGraphLines, data.nightConnector, data.nightConnectorInv, line.first, path0);
+            createLinePath(nightGraphLines, data.nightConnector, data.nightConnectorInv, line.first, path1);
         } else {
             createLinePath(dayGraph, line.first, path0);
             createLinePath(dayGraph, line.first, path1);
-            createLinePath(dayGraphLines, data.dayConnector, line.first, path0);
-            createLinePath(dayGraphLines, data.dayConnector, line.first, path1);
+            createLinePath(dayGraphLines, data.dayConnector, data.dayConnectorInv, line.first, path0);
+            createLinePath(dayGraphLines, data.dayConnector, data.dayConnectorInv, line.first, path1);
         }
     }
 }
 
 
-void App::createLinePath(GraphLines &graph, map<int, int> &connector, std::string line, std::vector<std::string> path) {
+void App::createLinePath(GraphLines &graph, map<int, int> &connector, map<int, vector<int>> &inverter, std::string line, std::vector<std::string> path) {
     if (path.empty()) return;
 
     for (int i = 0; i < path.size() - 1; i++) {
@@ -63,12 +65,36 @@ void App::createLinePath(GraphLines &graph, map<int, int> &connector, std::strin
         int destLN = graph.addNode(destNode);
         connector.insert({srcLN, src});
         connector.insert({destLN, dest});
+        inverter[src].push_back(srcLN);
+        inverter[dest].push_back(destLN);
 
         graph.addEdge(srcLN, destLN, line, 0);
-        graph.addEdge(src, srcLN, "", 0);
-        graph.addEdge(srcLN, src, "", 0);
-        graph.addEdge(dest, destLN, "", 0);
-        graph.addEdge(destLN, dest, "", 0);
+
+        for (int j = 1; j < graph.getNodes().size()-1; j++) {
+            int nd = connector.at(j);
+            //int nd = data.getNode(graph.getNodes()[n].name);
+            string nodeName = graph.getNodes()[j].name;
+            string nodeLine = graph.getNodes()[j].line;
+
+            if (srcNode.name == nodeName && srcNode.line != nodeLine && !srcNode.line.empty() && !nodeLine.empty()){
+                graph.addEdge(srcLN,j,srcNode.line, 1);
+                graph.addEdge(j,srcLN,nodeLine, 1);
+            }
+            if (destNode.name == nodeName && destNode.line != nodeLine && !destNode.line.empty() && !nodeLine.empty()){
+                graph.addEdge(destLN,j,destNode.line, 1);
+                graph.addEdge(j,destLN,nodeLine, 1);
+            }
+            if (distance(src, nd) < maxWalkDist && srcNode.name != nodeName && !srcNode.line.empty() && !nodeLine.empty()){
+                int w = srcNode.line!=nodeLine;
+                graph.addEdge(srcLN, j, "WALK", 1);
+                graph.addEdge(j, srcLN, "WALK", 1);
+            }
+            if (distance(nd, dest) < maxWalkDist && destNode.name != nodeName && !destNode.line.empty() && !nodeLine.empty()){
+                int w = destNode.line!=nodeLine;
+                graph.addEdge(destLN, j, "WALK", 1);
+                graph.addEdge(j, destLN, "WALK", 1);
+            }
+        }
     }
 }
 
@@ -81,18 +107,6 @@ void App::createLinePath(GraphGN &graph, string line, vector<string> path) {
     }
 }
 
-void App::createWalkPaths(int maxDist) {
-    size_t size = data.stopsVector.size();
-    for (int i = 0; i < size; i++){
-        for (int j = i+1; j < size - 1; j++){
-            int dist = distance(i,j);
-            if (dist <= maxDist){
-                dayGraph.addEdge(i, j, "WALK", dist);
-                dayGraph.addEdge(j, i, "WALK", dist);
-            }
-        }
-    }
-}
 void App::createWalkPaths() {
     size_t size = data.stopsVector.size();
     for (int i = 0; i < size; i++){
@@ -108,13 +122,13 @@ void App::createWalkPaths() {
     }
 }
 
-void App::viewPath(vector<pair<int, string>> path, const string& time) {
+void App::viewPath(vector<pair<int, string>> path, string time) {
     if (path.empty()){
         cout << "No path available." << endl;
         return;
     }
-    for (auto& stop : path){
-        if (stop.first > data.stopsVector.size()){
+    if (!time.empty()){
+        for (auto& stop : path){
             if (time=="day") stop.first = data.dayConnector.at(stop.first);
             if (time=="night") stop.first = data.nightConnector.at(stop.first);
         }
@@ -126,7 +140,7 @@ void App::viewPath(vector<pair<int, string>> path, const string& time) {
         string zone1 = data.stopsVector[path[i].first].zone;
         string stop2 = data.getStop(path[i+1].first) + "-" + data.stopsVector[path[i+1].first].name;
         string zone2 = data.stopsVector[path[i+1].first].zone;
-        int width = 35;
+        int width = 37;
         if (path[i].second != path[i+1].second && !path[i+1].second.empty()){
             cout << std::left << " -> " << setw(width) << stop1 << zone1 << endl;
             cout << std::left << " -> " << setw(width) << stop2 << zone2 << endl;
@@ -222,30 +236,6 @@ Data App::getData() {
     return data;
 }
 
-void App::connectLinesWalks(GraphLines &graph) {
-    for (int i = 1; i < graph.getNodes().size()-1; i++){
-        for (int j = i+1; j < graph.getNodes().size()-1; j++) {
-            int s = data.dayConnector.at(i);
-            int d = data.dayConnector.at(j);
-            int src = data.getNode(graph.getNodes()[s].name);
-            int dest = data.getNode(graph.getNodes()[d].name);
-
-            cout << "i: " << i << "  " << graph.getNodes()[src].name << "    j: " << j << "  " << graph.getNodes()[dest].name << endl;
-            cout << "s: " << s << "   d: " << d << endl;
-
-            if (graph.getNodes()[i].name == graph.getNodes()[j].name && graph.getNodes()[i].line != graph.getNodes()[j].line && !graph.getNodes()[i].line.empty() && !graph.getNodes()[j].line.empty()){
-                graph.addEdge(i,j,graph.getNodes()[i].line, 1);
-                graph.addEdge(j,i,graph.getNodes()[j].line, 1);
-            }
-            if (distance(src, dest) < maxWalkDist && graph.getNodes()[i].name != graph.getNodes()[j].name && !graph.getNodes()[i].line.empty() && !graph.getNodes()[j].line.empty()){
-                int w = graph.getNodes()[i].line!=graph.getNodes()[j].line;
-                graph.addEdge(i, j, "WALK", w);
-                graph.addEdge(j, i, "WALK", w);
-            }
-        }
-    }
-}
-
 void App::resetGraphs() {
     dayGraph = GraphGN();
     nightGraph = GraphGN();
@@ -253,7 +243,7 @@ void App::resetGraphs() {
     nightGraphLines = GraphLines();
     createGraphs();
     createWalkPaths();
-    connectLinesWalks(dayGraphLines);
-    connectLinesWalks(nightGraphLines);
+    //connectLinesWalks(dayGraphLines);
+    //connectLinesWalks(nightGraphLines);
 }
 

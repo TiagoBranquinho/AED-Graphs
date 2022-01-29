@@ -7,12 +7,13 @@
 #include <vector>
 
 class GraphLines : public Graph{
-    void dijkstraLines(int s);
+    void dijkstraLines(std::vector<int> s);
 
 public:
 
-    int dijkstraDistanceLN(int a, int b);
-    std::vector<std::pair<int,std::string>> dijkstraPathLN(int a, int b);
+    int dijkstraDistanceLN(std::vector<int> a, std::vector<int> b);
+    std::vector<std::pair<int,std::string>> dijkstraPathLN(std::vector<int> a, std::vector<int> b);
+    int minDest(std::vector<int> dest);
 };
 
 

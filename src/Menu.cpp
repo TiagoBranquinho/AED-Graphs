@@ -174,7 +174,13 @@ Menu *InformationMenu::nextMenu() {
             }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
-            int numLines = app.dayGraphLines.dijkstraDistanceLN(src,dest) - 1;
+            vector<int> srcLN = app.data.dayConnectorInv[src];
+            for (const auto& edge : app.dayGraph.getNodes()[src].adj)
+                srcLN.insert(srcLN.end(), app.data.dayConnectorInv[edge.dest].begin(), app.data.dayConnectorInv[edge.dest].end());
+            vector<int> destLN = app.data.dayConnectorInv[dest];
+            for (const auto& edge : app.dayGraph.getNodes()[dest].adj)
+                destLN.insert(destLN.end(), app.data.dayConnectorInv[edge.dest].begin(), app.data.dayConnectorInv[edge.dest].end());
+            int numLines = app.dayGraphLines.dijkstraDistanceLN(srcLN,destLN);
             string word = "lines";
             cout << "Stations " << app.getData().stopsVector[src].name << " and " << app.getData().stopsVector[dest].name << " are ";
             if(numLines == 0)
@@ -295,17 +301,31 @@ void PathMenu::display() {
 Menu *PathMenu::nextMenu() {
     switch (readInt()) {
         case 1: {
-            app.viewPath(app.getGraph().dijkstraPathZN(src, dest), "day");
+            app.viewPath(app.getGraph().dijkstraPathZN(src, dest), "");
             waitForKey();
             return this;
         }
         case 2: {
-            app.viewPath(app.getGraph().dijkstraPathDS(src, dest), "day");
+            app.viewPath(app.getGraph().dijkstraPathDS(src, dest), "");
             waitForKey();
             return this;
         }
         case 3: {
-            app.viewPath(app.dayGraphLines.dijkstraPathLN(src, dest), "day");
+            vector<int> srcLN = app.data.dayConnectorInv[src];
+            for (const auto& edge : app.dayGraph.getNodes()[src].adj)
+                srcLN.insert(srcLN.end(), app.data.dayConnectorInv[edge.dest].begin(), app.data.dayConnectorInv[edge.dest].end());
+            vector<int> destLN = app.data.dayConnectorInv[dest];
+            for (const auto& edge : app.dayGraph.getNodes()[dest].adj)
+                destLN.insert(destLN.end(), app.data.dayConnectorInv[edge.dest].begin(), app.data.dayConnectorInv[edge.dest].end());
+
+            auto path = app.dayGraphLines.dijkstraPathLN(srcLN, destLN);
+
+            if (path[0].second != app.data.getStop(src)) path.insert(path.begin(), {app.data.dayConnectorInv[src][0], "WALK"});
+            if (path.back().second != app.data.getStop(dest)){
+                path.back().second = "WALK";
+                path.insert(path.end(), {app.data.dayConnectorInv[dest][0], ""});
+            }
+            app.viewPath(path, "day");
             waitForKey();
             return this;
         }
