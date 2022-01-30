@@ -18,14 +18,22 @@ private:
     char sep = '_';
 
 public:
-    std::map<std::string, std::string> lines; /** Maps the line string code to the matching line description string */
-    std::vector<Stop> stopsVector; /** Vector of all stops with all their data, the vector indexes match the correspondent integer node identifiers, so that we can easily access them */
-    std::map<int, std::string> stops;/** Maps the node integer identifier to the matching stop code string */
-    std::map<std::string, int> nodes; /** Maps the stops code string to the node integer identifier */
-    std::map<int, int> nightConnector; /** Connector the maps the node identifiers of the GraphLines to the correspondent node in the GraphGN (night mode)  */
-    std::map<int, std::vector<int>> nightInverter; /** Inverter the maps the node identifiers of the GraphGN to the correspondent vector of nodes in the GraphLines (night mode) */
-    std::map<int, int> dayConnector; /** Connector the maps the node identifiers of the GraphLines to the correspondent node in the GraphGN (day mode)  */
-    std::map<int, std::vector<int>> dayInverter; /** Inverter the maps the node identifiers of the GraphGN to the correspondent vectors of node in the GraphLines (day mode)  */
+    /** Maps the line string code to the matching line description string */
+    std::map<std::string, std::string> lines;
+    /** Vector of all stops with all their data, the vector indexes match the correspondent integer node identifiers, so that we can easily access them */
+    std::vector<Stop> stopsVector;
+    /** Maps the node integer identifier to the matching stop code string */
+    std::map<int, std::string> stops;
+    /** Maps the stops code string to the node integer identifier */
+    std::map<std::string, int> nodes;
+    /** Connector the maps the node identifiers of the GraphLines to the correspondent node in the GraphGN (night mode)  */
+    std::map<int, int> nightConnector;
+    /** Inverter the maps the node identifiers of the GraphGN to the correspondent vector of nodes in the GraphLines (night mode) */
+    std::map<int, std::vector<int>> nightInverter;
+    /** Connector the maps the node identifiers of the GraphLines to the correspondent node in the GraphGN (day mode)  */
+    std::map<int, int> dayConnector;
+    /** Inverter the maps the node identifiers of the GraphGN to the correspondent vectors of node in the GraphLines (day mode)  */
+    std::map<int, std::vector<int>> dayInverter;
 
 public:
     /**
