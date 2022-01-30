@@ -10,7 +10,6 @@ void GraphGN::bfsStops(int s) {
     nodes[s].stopChanges = 0;
     while (!q.empty()) { // while there are still unvisited nodes
         int u = q.front(); q.pop();
-        //cout << nodes[u].name << endl; // show node order
         for (auto e : nodes[u].adj) {
             int v = e.dest;
             if (!nodes[v].visited && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
@@ -39,7 +38,6 @@ void GraphGN::dijkstraDist(int s) {
 
     while (q.getSize()>0) {
         int u = q.removeMin();
-        // cout << "Node " << u << " with dist = " << nodes[u].distGap << endl;
         nodes[u].visited = true;
         for (auto e : nodes[u].adj) {
             int v = e.dest;
@@ -47,7 +45,6 @@ void GraphGN::dijkstraDist(int s) {
             if (!nodes[v].visited && nodes[u].dist + w < nodes[v].dist && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
                 nodes[v].dist = nodes[u].dist + w;
                 q.decreaseKey(v, nodes[v].dist);
-
                 nodes[v].pred = u;
                 nodes[v].lineCon = e.line;
             }
@@ -70,22 +67,16 @@ void GraphGN::dijkstraZones(int s) {
     while (q.getSize()>0) {
         int u = q.removeMin();
         nodes[u].visited = true;
-        //cout << "In Node " << nodes[u].name << " " << nodes[u].zone << " lines = " << nodes[u].zoneChanges << endl;
         for (auto e : nodes[u].adj) {
             int v = e.dest;
             int w = nodes[u].zone != nodes[v].zone;
-            //cout << "Node " << nodes[v].name << " " << nodes[v].zone << " visited : " << nodes[v].visited << endl;
-            //cout << "Weight " << w << endl;
             if (!nodes[v].visited && nodes[u].zoneChanges + w < nodes[v].zoneChanges && !(e.line == "WALK" && nodes[u].lineCon == "WALK")) {
-                //cout << "Node " << nodes[v].name << " " << nodes[v].zone << " with " << nodes[v].zoneChanges << " changed" << endl;
                 nodes[v].zoneChanges = nodes[u].zoneChanges + w;
                 q.decreaseKey(v, nodes[v].zoneChanges);
                 nodes[v].pred = u;
                 nodes[v].lineCon = e.line;
-                //cout << "AFTER -> Node " << nodes[v].name << " " << nodes[v].zone << " with " << nodes[v].zoneChanges << " changed" << endl;
             }
         }
-        //cout << endl;
     }
 }
 

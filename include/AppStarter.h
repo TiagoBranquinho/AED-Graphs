@@ -1,7 +1,3 @@
-//
-// Created by Tiago Branquinho on 26/01/2022.
-//
-
 #ifndef GRAPHS_AED_APPSTARTER_H
 #define GRAPHS_AED_APPSTARTER_H
 
@@ -15,7 +11,13 @@ class AppStarter {
     App app;
     stack<Menu*> menuStack;
 public:
+    /**
+     * Default class constructor that pushes the main menu to the menuStack
+     */
     AppStarter();
+    /**
+     * Starts the application loop and call the App methods to load graphs data and set the default maximum walk distance
+     */
     void start();
 };
 

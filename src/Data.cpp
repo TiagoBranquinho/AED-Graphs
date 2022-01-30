@@ -105,10 +105,3 @@ int Data::getNode(std::string stop) {
 std::string Data::getStop(int node) {
     return stops.at(node);
 }
-
-void Data::clear() {
-    lines.clear();
-    stops.clear();
-    nodes.clear();
-    stopsVector.clear();
-}
