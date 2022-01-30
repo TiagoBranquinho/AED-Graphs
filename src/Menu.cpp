@@ -414,6 +414,7 @@ Menu *PathMenu::nextMenu() {
                 destLN.insert(destLN.end(), app.getInverter()[edge.dest].begin(), app.getInverter()[edge.dest].end());
 
             auto path = app.getGraphLN().dijkstraPathLN(srcLN, destLN);
+            auto lines = app.getGraphLN().dijkstraDistanceLN(srcLN, destLN);
             if (!path.empty()){
                 if (path[0].second != app.getData().getStop(src)) path.insert(path.begin(), {app.getInverter()[src][0], "WALK"});
                 if (path.back().second != app.getData().getStop(dest)){
@@ -421,6 +422,7 @@ Menu *PathMenu::nextMenu() {
                     path.insert(path.end(), {app.getInverter()[dest][0], ""});
                 }
             }
+            cout << "Line changes: " << lines << endl;
             app.viewPath(path, true);
             waitForKey();
             return this;
