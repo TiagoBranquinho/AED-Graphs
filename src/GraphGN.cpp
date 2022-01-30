@@ -7,7 +7,7 @@ void GraphGN::bfsStops(int s) {
     queue<int> q; // queue of unvisited nodes
     q.push(s);
     nodes[s].visited = true;
-    nodes[s].stopChanges = 1;
+    nodes[s].stopChanges = 0;
     while (!q.empty()) { // while there are still unvisited nodes
         int u = q.front(); q.pop();
         //cout << nodes[u].name << endl; // show node order
@@ -63,8 +63,8 @@ void GraphGN::dijkstraZones(int s) {
         nodes[v].lineCon = "";
         q.insert(v, INF);
     }
-    nodes[s].zoneChanges = 1;
-    q.decreaseKey(s, 1);
+    nodes[s].zoneChanges = 0;
+    q.decreaseKey(s, 0);
     nodes[s].pred = s;
 
     while (q.getSize()>0) {

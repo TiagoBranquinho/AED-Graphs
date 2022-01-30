@@ -47,7 +47,7 @@ double Menu::readCoordinate() {
         stringstream ss;
         ss << readStr(); ss >> coord;
         if(!ss.fail() && ss.eof()) break;
-        cout << "Invalid input. Try a valid integer..." << endl;
+        cout << "Invalid input. Enter number (double) ..." << endl;
     }
     cout << coord << endl;
     cout << endl;
@@ -219,13 +219,13 @@ Menu *InformationMenu::nextMenu() {
             string stop1 = readStr();
             if(app.getData().nodes.count(stop1) == 0){
                 cout << "Stop 1 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
             if(app.getData().nodes.count(stop2) == 0){
                 cout << "Stop 2 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
@@ -236,13 +236,13 @@ Menu *InformationMenu::nextMenu() {
             string stop1 = readStr();
             if(app.getData().nodes.count(stop1) == 0){
                 cout << "Stop 1 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
             if(app.getData().nodes.count(stop2) == 0){
                 cout << "Stop 2 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
@@ -274,25 +274,25 @@ Menu *InformationMenu::nextMenu() {
             string stop1 = readStr();
             if(app.getData().nodes.count(stop1) == 0){
                 cout << "Stop 1 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
             if(app.getData().nodes.count(stop2) == 0){
                 cout << "Stop 2 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
-            int numZones = app.getGraphGN().dijkstraDistanceZN(src,dest) - 1;
+            int numZones = app.getGraphGN().dijkstraDistanceZN(src,dest);
             if (numZones < 0){
                 cout << "No path available" << endl;
                 return this;
             }
-            string word = "lines";
+            string word = "zones";
             cout << "Stations " << app.getData().stopsVector[src].name << " and " << app.getData().stopsVector[dest].name << " are ";
             if(numZones == 0)
-                cout << "in the same line" << endl;
+                cout << "in the same zone" << endl;
             else{
                 if(numZones == 1)
                     word = word.substr(0,word.size()-1);
@@ -306,17 +306,17 @@ Menu *InformationMenu::nextMenu() {
             string stop1 = readStr();
             if(app.getData().nodes.count(stop1) == 0){
                 cout << "Stop 1 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             cout << "Stop 2 code: ";
             string stop2 = readStr();
             if(app.getData().nodes.count(stop2) == 0){
                 cout << "Stop 2 doesn't exist";
-                return new OptionsMenu(app);
+                return this;
             }
             int src = app.getData().getNode(stop1);
             int dest = app.getData().getNode(stop2);
-            int numStops = abs((int)app.getGraphGN().bfsPathST(src,dest).size() - 1);
+            int numStops = abs((int)app.getGraphGN().bfsPathST(src,dest).size());
             if (numStops < 0){
                 cout << "No path available" << endl;
                 return this;
@@ -391,11 +391,16 @@ void PathMenu::display() {
 Menu *PathMenu::nextMenu() {
     switch (readInt()) {
         case 1: {
+            int zones = app.getGraphGN().dijkstraDistanceZN(src, dest);
+            if (app.getData().stopsVector[src].zone.empty()) zones--;
+            if (app.getData().stopsVector[dest].zone.empty()) zones--;
+            cout << "Zone changes: " << zones << endl;
             app.viewPath(app.getGraphGN().dijkstraPathZN(src, dest), false);
             waitForKey();
             return this;
         }
         case 2: {
+            cout << "Travelled distance : " << app.getGraphGN().dijkstraDistanceDS(src, dest) << "m" << endl;
             app.viewPath(app.getGraphGN().dijkstraPathDS(src, dest), false);
             waitForKey();
             return this;
@@ -421,6 +426,10 @@ Menu *PathMenu::nextMenu() {
             return this;
         }
         case 4: {
+            int stops = app.getGraphGN().bfsDistanceST(src, dest);
+            if (app.getData().stopsVector[src].zone.empty()) stops--;
+            if (app.getData().stopsVector[dest].zone.empty()) stops--;
+            if (stops >= 0) cout << "Stop changes: " << stops << endl;
             app.viewPath(app.getGraphGN().bfsPathST(src, dest), false);
             waitForKey();
             return this;
