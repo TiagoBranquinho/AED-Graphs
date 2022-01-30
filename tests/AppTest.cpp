@@ -19,10 +19,10 @@ TEST(test1, apptest) {
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
 
-    double dist = app.getGraph().dijkstraDistanceDS(src, dest);
+    double dist = app.getGraphGN().dijkstraDistanceDS(src, dest);
     cout << "distance " << stop1 << "-" << stop2 << " : " << dist  << "m" << endl;
 
-    auto path = app.getGraph().dijkstraPathDS(src, dest);
+    auto path = app.getGraphGN().dijkstraPathDS(src, dest);
 
     string line;
     for (auto i : path){
@@ -56,7 +56,7 @@ TEST(test1, distTestWalkPaths) {
     int pbss2 = app.getData().getNode("PBSS2");
     cout << "dist cmp1 to cmp2: " << app.distance(cmp1, cmp2) << endl;
     cout << "dist cmp2 to pbss2: " << app.distance(cmp2, pbss2) << endl;
-    for (auto i : app.dayGraph.getNodes()[cmp2].adj){
+    for (auto i : app.getGraphGN().getNodes()[cmp2].adj){
         cout << app.getData().getStop(i.dest) << " - " << i.line << " - " << i.distGap << "m ,";
     }
     cout << endl;
@@ -73,11 +73,11 @@ TEST(test1, distTestWalkPaths) {
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
 
-    double dist = app.getGraph().dijkstraDistanceDS(src, dest);
+    double dist = app.getGraphGN().dijkstraDistanceDS(src, dest);
     cout << "distance " << stop1 << "-" << stop2 << " : " << dist  << "m" << endl;
 
-    auto path = app.getGraph().dijkstraPathDS(src, dest);
-    app.viewPath(path, "");
+    auto path = app.getGraphGN().dijkstraPathDS(src, dest);
+    app.viewPath(path, false);
 }
 
 TEST(test1, distLinesTest) {
@@ -98,24 +98,24 @@ TEST(test1, distLinesTest) {
     string stop1 = "CMP1";
     //string stop2 = "HMBC2";
     int src = app.getData().getNode(stop1);
-    vector<int> srcLN = app.data.dayConnectorInv[src];
-    for (auto edge : app.dayGraph.getNodes()[src].adj)
-        srcLN.insert(srcLN.end(), app.data.dayConnectorInv[edge.dest].begin(), app.data.dayConnectorInv[edge.dest].end());
+    vector<int> srcLN = app.getData().dayInverter[src];
+    for (auto edge : app.getGraphGN().getNodes()[src].adj)
+        srcLN.insert(srcLN.end(), app.getData().dayInverter[edge.dest].begin(), app.getData().dayInverter[edge.dest].end());
     int dest = app.getData().getNode(stop2);
-    vector<int> destLN = app.data.dayConnectorInv[dest];
-    for (auto edge : app.dayGraph.getNodes()[dest].adj)
-        destLN.insert(destLN.end(), app.data.dayConnectorInv[edge.dest].begin(), app.data.dayConnectorInv[edge.dest].end());
+    vector<int> destLN = app.getData().dayInverter[dest];
+    for (auto edge : app.getGraphGN().getNodes()[dest].adj)
+        destLN.insert(destLN.end(), app.getData().dayInverter[edge.dest].begin(), app.getData().dayInverter[edge.dest].end());
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of lines: " << app.dayGraphLines.dijkstraDistanceLN(srcLN, destLN) << endl;
+    cout << "number of lines: " << app.getGraphLN().dijkstraDistanceLN(srcLN, destLN) << endl;
 
-    auto path = app.dayGraphLines.dijkstraPathLN(srcLN, destLN);
-    if (path[0].second != stop1) path.insert(path.begin(), {app.data.dayConnectorInv[src][0], "WALK"});
+    auto path = app.getGraphLN().dijkstraPathLN(srcLN, destLN);
+    if (path[0].second != stop1) path.insert(path.begin(), {app.getData().dayInverter[src][0], "WALK"});
     if (path.back().second != stop2){
         path.back().second = "WALK";
-        path.insert(path.end(), {app.data.dayConnectorInv[dest][0], ""});
+        path.insert(path.end(), {app.getData().dayInverter[dest][0], ""});
     }
-    app.viewPath(path, "day");
+    app.viewPath(path, true);
 }
 
 TEST(test1, distZonesTest) {
@@ -137,10 +137,10 @@ TEST(test1, distZonesTest) {
     int dest = app.getData().getNode(stop2);
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of zones: " << app.getGraph().dijkstraDistanceZN(src, dest) << endl;
+    cout << "number of zones: " << app.getGraphGN().dijkstraDistanceZN(src, dest) << endl;
 
-    auto path = app.getGraph().dijkstraPathZN(src, dest);
-    app.viewPath(path, "");
+    auto path = app.getGraphGN().dijkstraPathZN(src, dest);
+    app.viewPath(path, false);
 }
 
 TEST(test1, distStopsTest) {
@@ -162,10 +162,10 @@ TEST(test1, distStopsTest) {
     int dest = app.getData().getNode(stop2);
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of stops: " << app.getGraph().bfsDistanceST(src, dest) << endl;
+    cout << "number of stops: " << app.getGraphGN().bfsDistanceST(src, dest) << endl;
 
-    auto path = app.getGraph().bfsPathST(src, dest);
-    app.viewPath(path, "");
+    auto path = app.getGraphGN().bfsPathST(src, dest);
+    app.viewPath(path, false);
 }
 
 TEST(test1, coordsLocalsTests) {
@@ -182,10 +182,10 @@ TEST(test1, coordsLocalsTests) {
     int dest = app.getData().getNode(stop1);
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of stops: " << app.getGraph().bfsDistanceST(src, dest) << endl;
+    cout << "number of stops: " << app.getGraphGN().bfsDistanceST(src, dest) << endl;
 
-    auto path = app.getGraph().bfsPathST(src, dest);
-    app.viewPath(path, "");
+    auto path = app.getGraphGN().bfsPathST(src, dest);
+    app.viewPath(path, false);
 
     cout << "BEFORE stop map size " << app.getData().stops.size() << endl;
     cout << "BEFORE nodes map size " << app.getData().nodes.size() << endl;
@@ -206,9 +206,9 @@ TEST(test1, coordsSRCandDESTTests) {
     int dest = app.addLocalNode({41.150147, -8.602150},"Destination", 1);
 
     cout << app.getData().getStop(src) << " to " << app.getData().getStop(dest) << endl;
-    cout << "number of lines: " << app.getGraph().dijkstraDistanceDS(src, dest) << endl;
+    cout << "number of lines: " << app.getGraphGN().dijkstraDistanceDS(src, dest) << endl;
 
-    auto path = app.getGraph().dijkstraPathDS(src, dest);
-    app.viewPath(path, "");
+    auto path = app.getGraphGN().dijkstraPathDS(src, dest);
+    app.viewPath(path, false);
     app.removeLocalNode(src);
 }

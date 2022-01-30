@@ -10,6 +10,12 @@
 
 class App {
 public:
+    enum MODE {DAY, NIGHT};
+    map<MODE, GraphGN> graphGN;
+    map<MODE, GraphLines> graphLN;
+    MODE CURRENT_MODE = DAY;
+
+private:
     int maxWalkDist = 0;
     Data data;
     GraphGN dayGraph;
@@ -20,10 +26,15 @@ public:
 public:
     App();
     void loadData();
-    Data getData();
-    GraphGN getGraph();
+    Data &getData();
+    GraphGN &getGraphGN();
+    GraphLines &getGraphLN();
     int getMaxWalkDist();
     void setMaxWalkDist(int dist);
+    MODE currentMode() const;
+    void setCurrentMode(MODE mode);
+    std::map<int,int> &getConnector();
+    std::map<int,std::vector<int>> &getInverter();
     void resetGraphs();
 
     void createGraphs();
@@ -35,11 +46,7 @@ public:
     int addLocalNode(pair<double, double> local, string name, int direction);
     void removeLocalNode(int node);
 
-    void viewPath(vector<pair<int, string>> path, string time);
-    void bestPathSTOPS(int src, int dest);
-    void bestPathDIST(int src, int dest);
-    void bestPathLINES(int src, int dest);
-    void bestPathZONES(GraphLines graph, int src, int dest);
+    void viewPath(vector<pair<int, string>> path, bool graphLN);
 
     int distance(int src, int dest);
     static int haversine(double lat1, double lon1, double lat2, double lon2);

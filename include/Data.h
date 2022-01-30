@@ -1,7 +1,3 @@
-//
-// Created by alexandre on 22/01/22.
-//
-
 #ifndef GRAPHS_AED_DATA_H
 #define GRAPHS_AED_DATA_H
 
@@ -27,9 +23,9 @@ public:
     std::map<int, std::string> stops;
     std::map<std::string, int> nodes;
     std::map<int, int> nightConnector;
-    std::map<int, std::vector<int>> nightConnectorInv;
+    std::map<int, std::vector<int>> nightInverter;
     std::map<int, int> dayConnector;
-    std::map<int, std::vector<int>> dayConnectorInv;
+    std::map<int, std::vector<int>> dayInverter;
 
 public:
     Data();

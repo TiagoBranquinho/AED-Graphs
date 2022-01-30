@@ -13,20 +13,16 @@ void App::loadData() {
 
 void App::createGraphs() {
     data.dayConnector.clear();
-    data.dayConnectorInv.clear();
+    data.dayInverter.clear();
     data.nightConnector.clear();
-    data.nightConnectorInv.clear();
-    for (int i = 1; i < data.stopsVector.size()-1; i++){
+    data.nightInverter.clear();
+    for (int i = 1; i < data.stopsVector.size(); i++){
         Node node;
         node.name = data.stopsVector[i].code;
         node.zone = data.stopsVector[i].zone;
         node.line = "";
         dayGraph.addNode(node);
         nightGraph.addNode(node);
-        /*dayGraphLines.addNode(node);
-        nightGraphLines.addNode(node);
-        data.dayConnector.insert({i, i});
-        data.nightConnector.insert({i, i});*/
     }
     for (const auto& line : data.lines) {
         vector<string> path0 = data.readLinePath(line.first,"0");
@@ -34,13 +30,13 @@ void App::createGraphs() {
         if (line.first.back() == 'M'){
             createLinePath(nightGraph, line.first, path0);
             createLinePath(nightGraph, line.first, path1);
-            createLinePath(nightGraphLines, data.nightConnector, data.nightConnectorInv, line.first, path0);
-            createLinePath(nightGraphLines, data.nightConnector, data.nightConnectorInv, line.first, path1);
+            createLinePath(nightGraphLines, data.nightConnector, data.nightInverter, line.first, path0);
+            createLinePath(nightGraphLines, data.nightConnector, data.nightInverter, line.first, path1);
         } else {
             createLinePath(dayGraph, line.first, path0);
             createLinePath(dayGraph, line.first, path1);
-            createLinePath(dayGraphLines, data.dayConnector, data.dayConnectorInv, line.first, path0);
-            createLinePath(dayGraphLines, data.dayConnector, data.dayConnectorInv, line.first, path1);
+            createLinePath(dayGraphLines, data.dayConnector, data.dayInverter, line.first, path0);
+            createLinePath(dayGraphLines, data.dayConnector, data.dayInverter, line.first, path1);
         }
     }
 }
@@ -122,15 +118,14 @@ void App::createWalkPaths() {
     }
 }
 
-void App::viewPath(vector<pair<int, string>> path, string time) {
+void App::viewPath(vector<pair<int, string>> path, bool graphLN) {
     if (path.empty()){
         cout << "No path available." << endl;
         return;
     }
-    if (!time.empty()){
+    if (graphLN){
         for (auto& stop : path){
-            if (time=="day") stop.first = data.dayConnector.at(stop.first);
-            if (time=="night") stop.first = data.nightConnector.at(stop.first);
+            stop.first = getConnector().at(stop.first);
         }
     }
     cout << endl;
@@ -198,11 +193,12 @@ void App::setMaxWalkDist(int dist) {
 
 int App::addLocalNode(pair<double, double> local, string name, int direction) {
     Node node; node.name = name;
+    node.line = "";
     Stop stop; stop.name = name;
     stop.latitude = local.first;
     stop.longitude = local.second;
 
-    int index = dayGraph.addNode(node);
+    int index = getGraphGN().addNode(node);
     data.stopsVector.push_back(stop);
     data.stops.insert({index, name});
     data.nodes.insert({name, index});
@@ -212,27 +208,23 @@ int App::addLocalNode(pair<double, double> local, string name, int direction) {
 
 void App::removeLocalNode(int node) {
     string code = data.getStop(node);
-    dayGraph.removeNode(node);
+    getGraphGN().removeNode(node);
     data.stopsVector.erase(data.stopsVector.begin()+node);
     data.stops.erase(node);
     data.nodes.erase(code);
 }
 
 void App::addWalkPathsToNode(int node, int direction) {
-    for (int i = 0; i < dayGraph.getNodes().size(); i++){
+    for (int i = 0; i < getGraphGN().getNodes().size(); i++){
         int dist = distance(node, i);
         if (dist <= maxWalkDist){
-            if (direction) dayGraph.addEdge(i, node, "WALK", dist);
-            else dayGraph.addEdge(node, i, "WALK", dist);
+            if (direction) getGraphGN().addEdge(i, node, "WALK", dist);
+            else getGraphGN().addEdge(node, i, "WALK", dist);
         }
     }
 }
 
-GraphGN App::getGraph() {
-    return dayGraph;
-}
-
-Data App::getData() {
+Data &App::getData() {
     return data;
 }
 
@@ -243,7 +235,34 @@ void App::resetGraphs() {
     nightGraphLines = GraphLines();
     createGraphs();
     createWalkPaths();
-    //connectLinesWalks(dayGraphLines);
-    //connectLinesWalks(nightGraphLines);
+    graphGN[DAY] = dayGraph;
+    graphGN[NIGHT] = nightGraph;
+    graphLN[DAY] = dayGraphLines;
+    graphLN[NIGHT] = nightGraphLines;
 }
 
+App::MODE App::currentMode() const {
+    return CURRENT_MODE;
+}
+
+void App::setCurrentMode(App::MODE time) {
+    CURRENT_MODE = time;
+}
+
+GraphGN &App::getGraphGN() {
+    return graphGN[CURRENT_MODE];
+}
+
+GraphLines &App::getGraphLN() {
+    return graphLN[CURRENT_MODE];
+}
+
+std::map<int, int> &App::getConnector() {
+    if (CURRENT_MODE==NIGHT) return data.nightConnector;
+    else return data.dayConnector;
+}
+
+std::map<int, std::vector<int>> &App::getInverter() {
+    if (CURRENT_MODE==NIGHT) return data.nightInverter;
+    else return data.dayInverter;
+}

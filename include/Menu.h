@@ -18,6 +18,7 @@ public:
     virtual Menu *nextMenu()=0;
     int readInt();
     std::string readStr();
+    double readCoordinate();
     void waitForKey();
     Menu *invalidInput();
 };
